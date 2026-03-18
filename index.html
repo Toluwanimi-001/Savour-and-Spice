@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 
   <!-- SEO Meta Tags -->
   <title>Savour and Spice – Good Food Delivered</title>
@@ -42,11 +42,24 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
 
   <style>
-    /* ----- GLOBAL RESET ----- */
+    /* ----- GLOBAL RESET & COPY PROTECTION ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      /* Disable text selection */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Allow selection on form inputs for usability */
+    input, textarea {
+      -webkit-user-select: auto;
+      -moz-user-select: auto;
+      -ms-user-select: auto;
+      user-select: auto;
     }
 
     html {
@@ -64,13 +77,8 @@
       font-weight: 350;
       letter-spacing: 0.3px;
       overflow-x: hidden;
-      animation: fadeIn 1.5s ease forwards;
       -webkit-overflow-scrolling: touch;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      opacity: 1; /* base opacity */
     }
 
     h1, h2, h3, h4 {
@@ -90,7 +98,20 @@
       z-index: 20;
     }
 
-    /* ----- VIDEO BACKGROUND WITH GRADIENT (optimized) ----- */
+    /* ----- FADE-IN ON SCROLL (hidden by default) ----- */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ----- VIDEO BACKGROUND (optimized) ----- */
     .video-background {
       position: fixed;
       top: 0;
@@ -156,7 +177,7 @@
       box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 138, 122, 0.2);
     }
 
-    /* ----- LOADING SCREEN (fades quickly) ----- */
+    /* ----- LOADING SCREEN (visible until page fully loaded) ----- */
     #loading {
       position: fixed;
       top: 0;
@@ -168,8 +189,8 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
+      transition: opacity 0.5s ease;
+      pointer-events: none; /* allow clicks through while fading */
     }
 
     .loader {
@@ -1409,7 +1430,7 @@
     <span>Added to cart</span>
   </div>
 
-  <!-- LOADING SCREEN (fades quickly) -->
+  <!-- LOADING SCREEN (visible until page fully loaded) -->
   <div id="loading">
     <div class="loader">
       <div class="logo-placeholder">
@@ -1495,10 +1516,10 @@
     <a href="#" onclick="closeMobileMenu(); toggleCart(); return false;">Cart</a>
   </div>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT (all sections have fade-section class) -->
   <div class="container">
-    <!-- NAVIGATION -->
-    <nav class="navbar">
+    <!-- NAVIGATION (fade) -->
+    <nav class="navbar fade-section" id="home">
       <a href="#home" class="logo">
         <img src="savor_and_spice-removebg-preview.png" alt="Savour & Spice" fetchpriority="high">
       </a>
@@ -1520,8 +1541,8 @@
     </nav>
 
     <!-- HERO -->
-    <section id="home">
-      <div class="hero">
+    <section>
+      <div class="hero fade-section">
         <div>
           <span class="hero-badge"><i class="fas fa-leaf"></i> Fresh · Fast · Flavour</span>
           <h1>Good Food <span>Delivered</span></h1>
@@ -1537,22 +1558,22 @@
 
     <!-- STATS COUNTERS -->
     <div class="stats-grid">
-      <div class="stat-item">
+      <div class="stat-item fade-section">
         <i class="fas fa-smile"></i>
         <div class="stat-number">15k+</div>
         <div class="stat-label">Happy Customers</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-section">
         <i class="fas fa-motorcycle"></i>
         <div class="stat-number">8k+</div>
         <div class="stat-label">Deliveries</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-section">
         <i class="fas fa-utensils"></i>
         <div class="stat-number">24</div>
         <div class="stat-label">Expert Chefs</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-section">
         <i class="fas fa-calendar"></i>
         <div class="stat-number">5</div>
         <div class="stat-label">Years Serving</div>
@@ -1561,7 +1582,7 @@
 
     <!-- MENU -->
     <section id="menu">
-      <div class="section-header">
+      <div class="section-header fade-section">
         <div>
           <h2 class="section-title">Our Menu</h2>
           <p class="section-sub">Crafted for every craving</p>
@@ -1569,7 +1590,7 @@
       </div>
 
       <!-- CATEGORY FILTER BUTTONS -->
-      <div class="filter-bar" id="filterBar">
+      <div class="filter-bar fade-section" id="filterBar">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="pizza">Pizza</button>
         <button class="filter-btn" data-filter="pasta">Pasta</button>
@@ -1577,10 +1598,10 @@
         <button class="filter-btn" data-filter="dessert">Desserts</button>
       </div>
 
-      <!-- MENU GRID (12 items with <img> + lazy loading) -->
+      <!-- MENU GRID -->
       <div class="menu-grid" id="menuGrid">
         <!-- Margherita Pizza -->
-        <div class="menu-item" data-name="Margherita Pizza" data-price="14.99" data-category="pizza">
+        <div class="menu-item fade-section" data-name="Margherita Pizza" data-price="14.99" data-category="pizza">
           <div class="menu-img">
             <img src="Margherita Pizza.jpg" alt="Margherita Pizza" loading="lazy" width="400" height="220">
           </div>
@@ -1594,7 +1615,7 @@
           </div>
         </div>
         <!-- Pepperoni Pizza -->
-        <div class="menu-item" data-name="Pepperoni Pizza" data-price="16.99" data-category="pizza">
+        <div class="menu-item fade-section" data-name="Pepperoni Pizza" data-price="16.99" data-category="pizza">
           <div class="menu-img">
             <img src="Pepperoni Pizza.jpg" alt="Pepperoni Pizza" loading="lazy" width="400" height="220">
           </div>
@@ -1608,7 +1629,7 @@
           </div>
         </div>
         <!-- Mushroom Pasta -->
-        <div class="menu-item" data-name="Mushroom Pasta" data-price="15.99" data-category="pasta">
+        <div class="menu-item fade-section" data-name="Mushroom Pasta" data-price="15.99" data-category="pasta">
           <div class="menu-img">
             <img src="Mushroom Pasta.jpg" alt="Mushroom Pasta" loading="lazy" width="400" height="220">
           </div>
@@ -1622,7 +1643,7 @@
           </div>
         </div>
         <!-- Bolognese -->
-        <div class="menu-item" data-name="Bolognese" data-price="16.99" data-category="pasta">
+        <div class="menu-item fade-section" data-name="Bolognese" data-price="16.99" data-category="pasta">
           <div class="menu-img">
             <img src="Bolognese.jpg" alt="Bolognese" loading="lazy" width="400" height="220">
           </div>
@@ -1636,7 +1657,7 @@
           </div>
         </div>
         <!-- Caesar Salad -->
-        <div class="menu-item" data-name="Caesar Salad" data-price="11.99" data-category="salad">
+        <div class="menu-item fade-section" data-name="Caesar Salad" data-price="11.99" data-category="salad">
           <div class="menu-img">
             <img src="Caesar Salad.jpg" alt="Caesar Salad" loading="lazy" width="400" height="220">
           </div>
@@ -1650,7 +1671,7 @@
           </div>
         </div>
         <!-- Greek Salad -->
-        <div class="menu-item" data-name="Greek Salad" data-price="12.99" data-category="salad">
+        <div class="menu-item fade-section" data-name="Greek Salad" data-price="12.99" data-category="salad">
           <div class="menu-img">
             <img src="Greek Salad.jpg" alt="Greek Salad" loading="lazy" width="400" height="220">
           </div>
@@ -1664,7 +1685,7 @@
           </div>
         </div>
         <!-- Tiramisu -->
-        <div class="menu-item" data-name="Tiramisu" data-price="8.99" data-category="dessert">
+        <div class="menu-item fade-section" data-name="Tiramisu" data-price="8.99" data-category="dessert">
           <div class="menu-img">
             <img src="Tiramisu.jpg" alt="Tiramisu" loading="lazy" width="400" height="220">
           </div>
@@ -1678,7 +1699,7 @@
           </div>
         </div>
         <!-- Cheesecake -->
-        <div class="menu-item" data-name="Cheesecake" data-price="7.99" data-category="dessert">
+        <div class="menu-item fade-section" data-name="Cheesecake" data-price="7.99" data-category="dessert">
           <div class="menu-img">
             <img src="Cheesecake.jpg" alt="Cheesecake" loading="lazy" width="400" height="220">
           </div>
@@ -1692,7 +1713,7 @@
           </div>
         </div>
         <!-- Veggie Burger -->
-        <div class="menu-item" data-name="Veggie Burger" data-price="13.99" data-category="burger">
+        <div class="menu-item fade-section" data-name="Veggie Burger" data-price="13.99" data-category="burger">
           <div class="menu-img">
             <img src="Veggie Burger.jpg" alt="Veggie Burger" loading="lazy" width="400" height="220">
           </div>
@@ -1706,7 +1727,7 @@
           </div>
         </div>
         <!-- Fish Tacos -->
-        <div class="menu-item" data-name="Fish Tacos" data-price="14.99" data-category="taco">
+        <div class="menu-item fade-section" data-name="Fish Tacos" data-price="14.99" data-category="taco">
           <div class="menu-img">
             <img src="Fish Tacos.jpg" alt="Fish Tacos" loading="lazy" width="400" height="220">
           </div>
@@ -1720,7 +1741,7 @@
           </div>
         </div>
         <!-- Lemonade -->
-        <div class="menu-item" data-name="Lemonade" data-price="3.99" data-category="drink">
+        <div class="menu-item fade-section" data-name="Lemonade" data-price="3.99" data-category="drink">
           <div class="menu-img">
             <img src="Lemonade.jpg" alt="Lemonade" loading="lazy" width="400" height="220">
           </div>
@@ -1734,7 +1755,7 @@
           </div>
         </div>
         <!-- Iced Coffee -->
-        <div class="menu-item" data-name="Iced Coffee" data-price="4.99" data-category="drink">
+        <div class="menu-item fade-section" data-name="Iced Coffee" data-price="4.99" data-category="drink">
           <div class="menu-img">
             <img src="Iced Coffee.jpg" alt="Iced Coffee" loading="lazy" width="400" height="220">
           </div>
@@ -1752,10 +1773,10 @@
 
     <!-- CAROUSEL -->
     <section>
-      <div class="section-header">
+      <div class="section-header fade-section">
         <h2 class="section-title">Customer Favourites</h2>
       </div>
-      <div class="swiper mySwiper">
+      <div class="swiper mySwiper fade-section">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <i class="fas fa-pizza-slice"></i>
@@ -1789,10 +1810,10 @@
 
     <!-- OUR STORY -->
     <section id="about">
-      <div class="section-header">
+      <div class="section-header fade-section">
         <h2 class="section-title">Our Story</h2>
       </div>
-      <div class="story-with-logo">
+      <div class="story-with-logo fade-section">
         <div class="story-logo">
           <img src="savor_and_spice-removebg-preview.png" alt="Savour & Spice">
         </div>
@@ -1805,17 +1826,17 @@
 
     <!-- CONTACT -->
     <section id="contact">
-      <div class="section-header">
+      <div class="section-header fade-section">
         <h2 class="section-title">Contact Us</h2>
       </div>
       <div class="contact-grid">
-        <div class="contact-card">
+        <div class="contact-card fade-section">
           <h3>Get In Touch</h3>
           <p><i class="fas fa-phone"></i> (555) 123-4567</p>
           <p><i class="fas fa-envelope"></i> hello@savourspice.com</p>
           <p><i class="fas fa-map-marker-alt"></i> 123 Foodie Lane, Brooklyn, NY</p>
         </div>
-        <div class="contact-card">
+        <div class="contact-card fade-section">
           <h3>Hours</h3>
           <p><i class="fas fa-clock"></i> Mon–Fri: 11am – 10pm</p>
           <p><i class="fas fa-clock"></i> Sat–Sun: 10am – 11pm</p>
@@ -1824,7 +1845,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer>
+    <footer class="fade-section">
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#home" class="logo">
@@ -1879,12 +1900,13 @@
   <!-- Swiper JS (deferred) -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
   <script>
-    // ----- LOADING SCREEN (fast fade) -----
-    window.addEventListener('DOMContentLoaded', function() {
+    // ----- LOADING SCREEN (fade out after page fully loaded) -----
+    window.addEventListener('load', function() {
+      // Small delay to ensure it's visible for at least a moment
       setTimeout(() => {
         document.getElementById('loading').style.opacity = '0';
-        setTimeout(() => document.getElementById('loading').style.display = 'none', 300);
-      }, 300); // even faster
+        setTimeout(() => document.getElementById('loading').style.display = 'none', 500);
+      }, 600); // visible for 600ms after load
     });
 
     // ----- CART STATE -----
@@ -2022,8 +2044,21 @@
     });
     window.scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // ----- INIT -----
-    updateCartUI();
+    // ----- FADE-IN ON SCROLL (Intersection Observer) -----
+    document.addEventListener('DOMContentLoaded', function() {
+      const fadeElements = document.querySelectorAll('.fade-section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Optional: unobserve after visible to save performance
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }); // trigger when 20% visible
+
+      fadeElements.forEach(el => observer.observe(el));
+    });
 
     // ----- SWIPER (wait for library) -----
     document.addEventListener('DOMContentLoaded', function() {
@@ -2036,8 +2071,42 @@
           pagination: { el: '.swiper-pagination', clickable: true },
           breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
         });
+      } else {
+        // If Swiper not loaded yet, retry after a short delay
+        setTimeout(() => {
+          if (typeof Swiper !== 'undefined') {
+            new Swiper('.mySwiper', {
+              slidesPerView: 1,
+              spaceBetween: 20,
+              loop: true,
+              autoplay: { delay: 3000, disableOnInteraction: false },
+              pagination: { el: '.swiper-pagination', clickable: true },
+              breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+            });
+          }
+        }, 500);
       }
     });
+
+    // ----- COPY PROTECTION (right-click & key combos) -----
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+C, Ctrl+V, etc.
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
+          (e.ctrlKey && e.key === 'u') ||
+          (e.ctrlKey && e.key === 'c') ||
+          (e.ctrlKey && e.key === 'v') ||
+          (e.ctrlKey && e.key === 'x') ||
+          (e.ctrlKey && e.key === 's')) {
+        e.preventDefault();
+        showToast('Viewing source is disabled');
+        return false;
+      }
+    });
+
+    // ----- INIT -----
+    updateCartUI();
   </script>
 </body>
 </html>
